@@ -22,3 +22,6 @@ While others might follow:
 - Coil1_IN, Coil2_IN, 
 - Coil1_MIDDLE, Coil2_MIDDLE, 
 - Coil1_END, Coil2_END.
+
+### Read More:
+For in-depth details on the A4988 driver, see the [official documentation](https://www.pololu.com/file/0J450/a4988_DMOS_microstepping_driver_with_translator.pdf).
