@@ -12,7 +12,6 @@ A module to control a bipolar stepper motor using an A4988 driver board.
 - `trigger_zero()`: Resets the motor's position data to zero.
 - `set_pos(pos)`: Sets the motor's current position.
 - `get_position()`: Returns the current position data of the motor.
-- `compute_angle()`: Calculates and updates the current rotational angle based on the motor's position.
 - `set_max_steps(number)`: Sets the maximum step count for micro-stepping and configures the driver accordingly.
 
 **Note**: Stepper motor outputs can vary. Some motors may have the configuration: 
