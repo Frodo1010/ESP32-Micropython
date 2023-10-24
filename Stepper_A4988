@@ -1,0 +1,112 @@
+"""
+This module uses time.sleep().
+If you plan to use multiple stepper motors or a stepper in conjunction with sensors, 
+it's recommended to use threads for smooth operation.
+"""
+
+from machine import Pin, Timer
+import time
+
+class Stepper_A4988(): 
+    def __init__(self,step_pin,dir_pin,sleep_pin,reset_pin,ms1,ms2,ms3,angle = 1.8):
+        self.step_pin = Pin(step_pin, Pin.OUT)
+        self.dir_pin = Pin(dir_pin,Pin.OUT)
+        self.sleep_pin = Pin(sleep_pin, Pin.OUT)
+        self.reset_pin = Pin(reset_pin, Pin.OUT)
+        self.ms1 = Pin(ms1, Pin.OUT)
+        self.ms2 = Pin(ms2, Pin.OUT) 
+        self.ms3 = Pin(ms3, Pin.OUT)
+        
+        self.max_steps = 200
+        self.angle_size = angle # normaly its 1.8°, if you want to change it, then by initialising
+        self.act_angle_size = 1.8  #Value changes relativ to the microstepping
+    
+        self.direction = False 
+        self.pos = 0
+        self.angle = 0
+        self.compute_max_steps()
+    
+    def move_step(self,speed): #moves only one step!
+        self.step_pin.on()
+        time.sleep(speed)
+        self.step_pin.off()
+        time.sleep(speed)
+        
+        self._step_counter()
+     
+    def _step_counter(self): #counting the steps for computing the angle and position
+        if self.direction == 0:
+            self.pos += 1
+        else:
+            self.pos -= 1
+            
+        self.compute_angle()
+            
+    def move_inc(self,steps,speed = 0.005): #relative movement from the current position      
+        for i in range(steps):
+            self.move_step(speed)
+    
+    def _find_way(self,pos): #finds the number of steps for absolut movement
+        return abs(self.pos - pos)
+            
+    def move_abs(self,pos,speed = 0.005): #set movement to an absolut value from the current position
+        way = self._find_way(pos)
+        for i in range(way):
+            self.move_step(speed)        
+    
+    def trigger_dir(self): #change direction
+        if self.direction:
+            self.dir_pin.off()
+            self.direction = False
+        else:
+            self.dir_pin.on()
+            self.direction = True
+        
+    def trigger_zero(self): #set position data to 0!
+        self.pos = 0
+        self.compute_angle()
+    
+    def set_pos(self,pos): #set postiostion to Value
+        self.pos = pos
+        self.compute_angle()
+        
+    def get_position(self): # returns all position data
+        return [self.pos,self.angle,self.act_angle_size,self.direction]
+    
+    def compute_angle(self): #compute the angle
+        self.angle = (self.pos / self.max_steps) * 360 % 360
+    
+    def set_max_steps(self, number):
+        if number not in [200, 400, 800, 1600, 3200]:
+            raise ValueError(f"Ungültige Schrittzahl: {number}. Verfügbare Optionen sind: 200, 400, 800, 1600, 3200.")
+        
+        if number == 200:
+            self.ms1.off()
+            self.ms2.off()
+            self.ms3.off()
+            self.max_steps = 200
+            self.act_angle_size = self.angle_size
+        elif number == 400:
+            self.ms1.on()
+            self.ms2.off()
+            self.ms3.off()
+            self.max_steps = 400
+            self.act_angle_size = self.angle_size /2
+        elif number == 800:
+            self.ms1.off()
+            self.ms2.on()
+            self.ms3.off()
+            self.max_steps = 800
+            self.act_angle_size = self.angle_size /4
+        elif number == 1600:
+            self.ms1.on()
+            self.ms2.on()
+            self.ms3.off()
+            self.max_steps = 1600
+            self.act_angle_size = self.angle_size /8
+        elif number == 3200:
+            self.ms1.on()
+            self.ms2.on()
+            self.ms3.on()
+            self.max_steps = 3200
+            self.act_angle_size = self.angle_size /16
