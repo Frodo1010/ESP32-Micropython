@@ -1,6 +1,9 @@
 # ESP32-Micropython
 Hardware modules written in Micropython for the ESP32.
 
+## Stepper_A4988
+A module to control a bipolar stepper motor using an A4988 driver board.
+
 **Note**: Stepper motor outputs can vary. Some motors may have the configuration: 
 - Coil1_IN, Coil1_MIDDLE, Coil1_END, 
 - Coil2_IN, Coil2_MIDDLE, Coil2_END.
@@ -9,10 +12,6 @@ While others might follow:
 - Coil1_IN, Coil2_IN, 
 - Coil1_MIDDLE, Coil2_MIDDLE, 
 - Coil1_END, Coil2_END.
-
-
-## Stepper_A4988
-A module to control a bipolar stepper motor using an A4988 driver board.
 
 ### Functions:
 - `move_step(speed)`: Moves the motor by one step.
