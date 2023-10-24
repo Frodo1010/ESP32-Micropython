@@ -40,7 +40,7 @@ class Stepper_A4988():
         else:
             self.pos -= 1
             
-        self.compute_angle()
+        self._compute_angle()
             
     def move_inc(self,steps,speed = 0.005): #relative movement from the current position      
         for i in range(steps):
@@ -64,16 +64,16 @@ class Stepper_A4988():
         
     def trigger_zero(self): #set position data to 0!
         self.pos = 0
-        self.compute_angle()
+        self._compute_angle()
     
     def set_pos(self,pos): #set postiostion to Value
         self.pos = pos
-        self.compute_angle()
+        self._compute_angle()
         
     def get_position(self): # returns all position data
         return [self.pos,self.angle,self.act_angle_size,self.direction]
     
-    def compute_angle(self): #compute the angle
+    def _compute_angle(self): #compute the angle
         self.angle = (self.pos / self.max_steps) * 360 % 360
     
     def set_max_steps(self, number):
