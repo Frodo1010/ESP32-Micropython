@@ -78,7 +78,7 @@ class Stepper_A4988():
     
     def set_max_steps(self, number):
         if number not in [200, 400, 800, 1600, 3200]:
-            raise ValueError(f"Ungültige Schrittzahl: {number}. Verfügbare Optionen sind: 200, 400, 800, 1600, 3200.")
+            raise ValueError(f"Unknown Stepnumber: {number}. Available Options: 200, 400, 800, 1600, 3200.")
         
         if number == 200:
             self.ms1.off()
